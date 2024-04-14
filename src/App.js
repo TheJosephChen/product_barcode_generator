@@ -8,9 +8,6 @@ function App() {
   const [prevTableState, setPrevTableState] = useState();
   const [showUndo, setShowUndo] = useState(false);
 
-  const [lotNo, setLotNo] = useState();
-  const [barcode, setBarcode] = useState();
-
   const [productName, setProductName] = useState("productName");
   const [shipmentDate, setShipmentDate] = useState("shipmentDate");
 
@@ -22,7 +19,7 @@ function App() {
     
     e.preventDefault();
 
-    const [table, tableArray, newLot, newBar] = GenerateBarcodes(e, tableState, setLotNo, setBarcode);
+    const [table, tableArray, newLot, newBar] = GenerateBarcodes(e, tableState);
     setProductName(e.target.elements.product.value);
     setShipmentDate(e.target.elements.shipment.value);
     setPrevTableBody(tableBody);
@@ -33,6 +30,8 @@ function App() {
     setShowUndo(true);
 
     window.alert(`Initial Lot No and Barcodes have changed. Please note these for future use: \n The next unused Lot No is ${newLot}\n The next unused Barcode No is ${newBar}`);
+    document.getElementById("lotNoStart").value = newLot;
+    document.getElementById("barNoStart").value = newBar;
   }
 
   const handleDownload = () => {
@@ -71,7 +70,6 @@ function App() {
                 <input
                   id="lotNoStart"
                   type="text"
-                  value={lotNo}
                 />
               </label>
             </div>
@@ -81,7 +79,6 @@ function App() {
                 <input
                   id="barNoStart"
                   type="text"
-                  value={barcode}
                 />
               </label>
             </div>
