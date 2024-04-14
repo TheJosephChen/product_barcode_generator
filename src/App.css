@@ -1,0 +1,28 @@
+.appContainer {
+  margin: 20px;
+}
+
+.numberMessage {
+  margin-bottom: 10px;
+}
+.form-row {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.col {
+  margin-right: 10px;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  width: 200px;
+}
+
+button {
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
