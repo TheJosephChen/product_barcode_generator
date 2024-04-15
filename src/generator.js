@@ -16,7 +16,7 @@ function GenerateBarcodes(e, tableState, setLotNo, setBarcode) {
 
     const splitCode = (numberCode) => {
         const len = numberCode.length;
-        var finalNonNumericIndex = 0;
+        var finalNonNumericIndex = -1;
         for (var i = 0; i < len; i++) {
             var char = numberCode[i];
             if (char >= '0' && char <= '9') {
@@ -27,16 +27,29 @@ function GenerateBarcodes(e, tableState, setLotNo, setBarcode) {
             }
         }
         if (finalNonNumericIndex === len - 1) {
-            return [numberCode, 0]
+            return ["", numberCode]
         }
         const prefix = numberCode.substring(0, finalNonNumericIndex + 1);
         const numeral = parseInt(numberCode.substring(finalNonNumericIndex + 1));
         return [prefix, numeral];
     }
 
+    const padZeros = (numberCode, prefix, numeral) => {
+        const len = numberCode.length;
+        const unpaddedLen = (prefix + numeral).length;
+        if (unpaddedLen < len) {
+            const diff = len - unpaddedLen;
+            for (var i=0; i < diff; i++) {
+                prefix += "0";
+            }
+        }
+        return prefix + numeral;
+
+    }
+
     const [lotPrefix, lotNumeral] = splitCode(initialLotNo);
     const [barPrefix, barNumeral] = splitCode(initialBarcode);
-    const newLot = lotNumeral + 1;
+    const newLot = padZeros(initialLotNo, lotPrefix, lotNumeral + 1);
     const newBar = barNumeral + rows;
 
     const renderTable = () => {
@@ -48,7 +61,7 @@ function GenerateBarcodes(e, tableState, setLotNo, setBarcode) {
     }
     const createTableRow = (row) => {
         return (
-            <tr key={barPrefix + row[8]}>
+            <tr key={row[8]}>
                 <td>{row[0]}</td>
                 <td>{row[1]}</td>
                 <td>{row[2]}</td>
@@ -57,7 +70,7 @@ function GenerateBarcodes(e, tableState, setLotNo, setBarcode) {
                 <td>{row[5]}</td>
                 <td>{row[6]}</td>
                 <td>{row[7]}</td>
-                <td>{barPrefix + row[8]}</td>
+                <td>{row[8]}</td>
             </tr>
         )
     }
@@ -72,13 +85,13 @@ function GenerateBarcodes(e, tableState, setLotNo, setBarcode) {
             conc, 
             amt, 
             storage, 
-            i]);
+            padZeros(initialBarcode, barPrefix, i)]);
         }
     }
 
     populateTableArray();
     const table = renderTable();
-    return [table, tableArray, lotPrefix + newLot, barPrefix + newBar]
+    return [table, tableArray, newLot, padZeros(initialBarcode, barPrefix,  newBar)]
 }
 
 export default GenerateBarcodes;
